@@ -1,0 +1,75 @@
+# API Contract: Authentication Endpoints for Todo Web App
+
+## JWT Token Validation Schema
+
+### Token Request
+```json
+{
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "description": "JWT token obtained from Better Auth after login"
+    }
+  },
+  "required": ["token"]
+}
+```
+
+### Token Response
+```json
+{
+  "type": "object",
+  "properties": {
+    "valid": {
+      "type": "boolean",
+      "description": "Indicates if token is valid"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "User ID extracted from token"
+    },
+    "email": {
+      "type": "string",
+      "description": "User email from token"
+    },
+    "expires_at": {
+      "type": "integer",
+      "description": "Unix timestamp of token expiration"
+    }
+  },
+  "required": ["valid", "user_id", "email", "expires_at"]
+}
+```
+
+## Protected API Request Structure
+
+### Required Headers
+```
+Authorization: Bearer {jwt_token}
+Content-Type: application/json
+```
+
+### Expected 401 Response
+```json
+{
+  "detail": "Unauthorized"
+}
+```
+
+## Authentication Flow
+
+### 1. User Login via Better Auth
+- User submits credentials to Better Auth
+- Better Auth returns session and JWT token
+
+### 2. API Requests with JWT
+- Frontend attaches `Authorization: Bearer {token}` header
+- Backend validates JWT signature using BETTER_AUTH_SECRET
+- Backend extracts user ID from validated token
+- Backend authorizes request based on user ID
+
+### 3. Resource Access Control
+- Backend validates JWT user_id matches requested resource owner
+- Backend filters database queries by authenticated user ID
+- Backend returns only authorized resources

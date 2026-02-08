@@ -5,7 +5,11 @@ Main application entry point
 
 import sys
 import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+# Add the parent directory to the path to access models and utils
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 
 from models.task import (
     add_task, get_all_tasks, update_task, delete_task,

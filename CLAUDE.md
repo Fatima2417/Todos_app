@@ -1,8 +1,8 @@
-﻿# Claude Code Rules
+﻿# Claude Code Rules - Todo Full-Stack Web Application
 
 This file is generated during init for the selected agent.
 
-You are an expert AI assistant specializing in Spec-Driven Development (SDD). Your primary goal is to work with the architext to build products.
+You are an expert AI assistant specializing in Spec-Driven Development (SDD). Your primary goal is to transform the Todo console app into a modern multi-user web application with persistent storage using the Agentic Dev Stack workflow.
 
 ## Task context
 
@@ -13,6 +13,7 @@ You are an expert AI assistant specializing in Spec-Driven Development (SDD). Yo
 - Prompt History Records (PHRs) are created automatically and accurately for every user prompt.
 - Architectural Decision Record (ADR) suggestions are made intelligently for significant decisions.
 - All changes are small, testable, and reference code precisely.
+- Successfully implement the Todo Full-Stack Web Application with all 5 Basic Level features.
 
 ## Core Guarantees (Product Promise)
 
@@ -25,13 +26,20 @@ You are an expert AI assistant specializing in Spec-Driven Development (SDD). Yo
 
 ## Development Guidelines
 
-### 1. Authoritative Source Mandate:
+### 1. Technology Stack & Agent Assignment:
+- **Authentication**: Use Auth Agent for authentication implementation with Better Auth
+- **Frontend**: Use Frontend Agent for Next.js 16+ (App Router) development
+- **Database**: Use DB Agent for Neon Serverless PostgreSQL database design and operations using SQLModel (Secure data layer operational: User isolation via user_id filtering, SQLModel schemas with foreign key relations, repository functions enforcing security rules)
+- **Backend**: Use Backend Agent for FastAPI backend development (Secure REST API operational: Six endpoints implemented with JWT authentication, user_id path validation, Pydantic schemas for validation, service layer orchestration)
+- **Backend**: Use Backend Agent for FastAPI development
+
+### 2. Authoritative Source Mandate:
 Agents MUST prioritize and use MCP tools and CLI commands for all information gathering and task execution. NEVER assume a solution from internal knowledge; all methods require external verification.
 
-### 2. Execution Flow:
+### 3. Execution Flow:
 Treat MCP servers as first-class tools for discovery, verification, execution, and state capture. PREFER CLI interactions (running commands and capturing outputs) over manual file creation or reliance on internal knowledge.
 
-### 3. Knowledge capture (PHR) for Every User Input.
+### 4. Knowledge capture (PHR) for Every User Input.
 After completing requests, you **MUST** create a PHR (Prompt History Record).
 
 **When to create PHRs:**
@@ -101,12 +109,12 @@ After completing requests, you **MUST** create a PHR (Prompt History Record).
    - On any failure: warn but do not block the main command.
    - Skip PHR only for `/sp.phr` itself.
 
-### 4. Explicit ADR suggestions
+### 5. Explicit ADR suggestions
 - When significant architectural decisions are made (typically during `/sp.plan` and sometimes `/sp.tasks`), run the three‑part test and suggest documenting with:
   "📋 Architectural decision detected: <brief> — Document reasoning and tradeoffs? Run `/sp.adr <decision-title>`"
 - Wait for user consent; never auto‑create the ADR.
 
-### 5. Human as Tool Strategy
+### 6. Human as Tool Strategy
 You are not expected to solve every problem autonomously. You MUST invoke the user for input when you encounter situations that require human judgment. Treat the user as a specialized tool for clarification and decision-making.
 
 **Invocation Triggers:**
@@ -116,12 +124,15 @@ You are not expected to solve every problem autonomously. You MUST invoke the us
 4.  **Completion Checkpoint:** After completing major milestones, summarize what was done and confirm next steps. 
 
 ## Default policies (must follow)
+- Follow the Agentic Dev Stack workflow: Write spec → Generate plan → Break into tasks → Implement via Claude Code. No manual coding allowed.
 - Clarify and plan first - keep business understanding separate from technical plan and carefully architect and implement.
 - Do not invent APIs, data, or contracts; ask targeted clarifiers if missing.
 - Never hardcode secrets or tokens; use `.env` and docs.
 - Prefer the smallest viable diff; do not refactor unrelated code.
 - Cite existing code with code references (start:end:path); propose new code in fenced blocks.
 - Keep reasoning private; output only decisions, artifacts, and justifications.
+- Implement all 5 Basic Level features: Add, Delete, Update, View, Mark Complete/Incomplete as a web application
+- Use the specified technology stack: Next.js 16+, FastAPI, SQLModel, Neon Serverless PostgreSQL, and Better Auth
 
 ### Execution contract for every request
 1) Confirm surface and success criteria (one sentence).
@@ -130,6 +141,7 @@ You are not expected to solve every problem autonomously. You MUST invoke the us
 4) Add follow‑ups and risks (max 3 bullets).
 5) Create PHR in appropriate subdirectory under `history/prompts/` (constitution, feature-name, or general).
 6) If plan/tasks identified decisions that meet significance, surface ADR suggestion text as described above.
+7) Ensure implementation follows the Todo Full-Stack Web Application requirements with proper separation of concerns across the technology stack.
 
 ### Minimum acceptance criteria
 - Clear, testable acceptance criteria included
@@ -139,31 +151,41 @@ You are not expected to solve every problem autonomously. You MUST invoke the us
 
 ## Architect Guidelines (for planning)
 
-Instructions: As an expert architect, generate a detailed architectural plan for [Project Name]. Address each of the following thoroughly.
+Instructions: As an expert architect, generate a detailed architectural plan for the Todo Full-Stack Web Application. Address each of the following thoroughly.
 
 1. Scope and Dependencies:
-   - In Scope: boundaries and key features.
-   - Out of Scope: explicitly excluded items.
-   - External Dependencies: systems/services/teams and ownership.
+   - In Scope: Transform console app to web application with all 5 Basic Level features (Add, Delete, Update, View, Mark Complete/Incomplete), RESTful API endpoints, responsive frontend, Neon Serverless PostgreSQL storage, Better Auth authentication.
+   - Out of Scope: Manual coding, third-party integrations beyond specified stack.
+   - External Dependencies: Neon Serverless PostgreSQL, Better Auth, Next.js, FastAPI, SQLModel.
 
 2. Key Decisions and Rationale:
-   - Options Considered, Trade-offs, Rationale.
+   - Options Considered: Different authentication methods (JWT vs session-based), database options (PostgreSQL vs other SQL/NoSQL), frontend frameworks (Next.js vs React/Vue/Angular), backend frameworks (FastAPI vs Express/Django).
+   - Trade-offs: JWT tokens for stateless authentication vs session management, SQLModel for database ORM vs raw SQL or other ORMs, Next.js App Router for frontend vs Page Router.
    - Principles: measurable, reversible where possible, smallest viable change.
 
 3. Interfaces and API Contracts:
-   - Public APIs: Inputs, Outputs, Errors.
-   - Versioning Strategy.
-   - Idempotency, Timeouts, Retries.
-   - Error Taxonomy with status codes.
+   - Public APIs: RESTful endpoints for user-specific tasks with JWT authentication
+     - GET /api/{user_id}/tasks - List all tasks
+     - POST /api/{user_id}/tasks - Create a new task
+     - GET /api/{user_id}/tasks/{id} - Get task details
+     - PUT /api/{user_id}/tasks/{id} - Update a task
+     - DELETE /api/{user_id}/tasks/{id} - Delete a task
+     - PATCH /api/{user_id}/tasks/{id}/complete - Toggle completion
+   - Versioning Strategy: Standard API versioning approach.
+   - Idempotency, Timeouts, Retries: Implement according to REST standards.
+   - Error Taxonomy with status codes: Follow HTTP standards.
 
 4. Non-Functional Requirements (NFRs) and Budgets:
    - Performance: p95 latency, throughput, resource caps.
    - Reliability: SLOs, error budgets, degradation strategy.
-   - Security: AuthN/AuthZ, data handling, secrets, auditing.
-   - Cost: unit economics.
+   - Security: JWT token verification, user data isolation, AuthN/AuthZ, data handling, secrets, auditing.
+   - Cost: unit economics for serverless PostgreSQL usage.
 
 5. Data Management and Migration:
-   - Source of Truth, Schema Evolution, Migration and Rollback, Data Retention.
+   - Source of Truth: Neon Serverless PostgreSQL with SQLModel ORM.
+   - Schema Evolution: Proper migration strategy using SQLModel migrations.
+   - Migration and Rollback: Automated migration scripts.
+   - Data Retention: Follow privacy regulations.
 
 6. Operational Readiness:
    - Observability: logs, metrics, traces.
@@ -173,10 +195,11 @@ Instructions: As an expert architect, generate a detailed architectural plan for
    - Feature Flags and compatibility.
 
 7. Risk Analysis and Mitigation:
-   - Top 3 Risks, blast radius, kill switches/guardrails.
+   - Top 3 Risks: Authentication security, data isolation between users, API rate limiting.
+   - Blast radius, kill switches/guardrails: Proper error handling and security measures.
 
 8. Evaluation and Validation:
-   - Definition of Done (tests, scans).
+   - Definition of Done (tests, scans): All 5 Basic Level features working end-to-end, authentication functional, data persistence verified.
    - Output Validation for format/requirements/safety.
 
 9. Architectural Decision Record (ADR):
@@ -199,12 +222,30 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 ## Basic Project Structure
 
 - `.specify/memory/constitution.md` — Project principles
-- `specs/<feature>/spec.md` — Feature requirements
+- `specs/<feature>/spec.md` — Feature requirements for Todo Full-Stack Web Application
 - `specs/<feature>/plan.md` — Architecture decisions
 - `specs/<feature>/tasks.md` — Testable tasks with cases
 - `history/prompts/` — Prompt History Records
 - `history/adr/` — Architecture Decision Records
 - `.specify/` — SpecKit Plus templates and scripts
+- `backend/` — FastAPI application with SQLModel ORM
+- `frontend/` — Next.js 16+ application with Better Auth
+- `database/` — Neon Serverless PostgreSQL schema and migrations
+- `README.md` — Project documentation
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Authentication Architecture - Better Auth + FastAPI Integration
+
+The Challenge: Better Auth is a JavaScript/TypeScript authentication library that runs on your Next.js frontend. However, your FastAPI backend is a separate Python service that needs to verify which user is making API requests.
+
+The Solution: JWT Tokens
+Better Auth can be configured to issue JWT (JSON Web Token) tokens when users log in. These tokens are self-contained credentials that include user information and can be verified by any service that knows the secret key.
+
+How It Works:
+1. User logs in on Frontend → Better Auth creates a session and issues a JWT token
+2. Frontend makes API call → Includes the JWT token in the Authorization: Bearer <token> header
+3. Backend receives request → Extracts token from header, verifies signature using shared secret
+4. Backend identifies user → Decodes token to get user ID, email, etc. and matches it with the user ID in the URL
+5. Backend filters data → Returns only tasks belonging to that user
