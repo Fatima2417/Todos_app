@@ -3,8 +3,9 @@ uvicorn==0.24.0
 pyjwt==2.8.0
 python-decouple==3.8
 python-multipart==0.0.6
-sqlmodel==0.0.8
-SQLAlchemy==1.4.41
+sqlmodel==0.0.16
+SQLAlchemy==2.0.23
 psycopg2-binary==2.9.9
 passlib[bcrypt]==1.7.4
 requests==2.31.0
+python-dotenv==1.0.0

@@ -11,7 +11,8 @@ def get_db():
     FastAPI dependency that provides a database session.
     This ensures that each request gets a fresh session that's closed after the request.
     """
-    yield from get_session()
+    with get_session() as session:
+        yield session
 
 
 def get_current_user(request: Request, db: Session = Depends(get_db)):
