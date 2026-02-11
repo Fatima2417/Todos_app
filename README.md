@@ -7,11 +7,18 @@ A comprehensive full-stack todo application featuring a FastAPI backend with JWT
 This is a full-featured todo application built with modern web technologies. The application includes:
 - A FastAPI backend with JWT authentication and SQLModel database integration
 - A Next.js frontend with responsive UI components and state management
+- AI Chat Assistant for natural language task management (Phase 3)
 - Authentication system with signup/login functionality
 - Task management with CRUD operations
 - Responsive dashboard layout
 
 ## Features
+
+### AI Assistant (Phase 3)
+- **Natural Language CRUD**: Add, list, complete, and delete tasks using plain English.
+- **Persistent Conversation**: Chat history is saved and reloaded across sessions.
+- **MCP Tool Integration**: Standardized tool-calling via Model Context Protocol.
+- **Secure Data Isolation**: AI only accesses tasks belonging to the authenticated user.
 
 ### Backend (FastAPI)
 - JWT-based authentication system
@@ -115,6 +122,18 @@ This is a full-featured todo application built with modern web technologies. The
    npm run dev
    # or
    yarn dev
+   ```
+
+### Phase 3 Setup (AI Assistant)
+
+1. **Cohere API Key**: Obtain a free API key from [Cohere](https://dashboard.cohere.com/api-keys).
+2. **Environment Variables**:
+   - Backend (.env): Add `COHERE_API_KEY=your_key_here`
+   - Frontend (.env.local): Add `NEXT_PUBLIC_OPENAI_DOMAIN_KEY=your_domain_key` (if using OpenAI ChatKit)
+3. **Database Migration**: Run the chat migration script to create new tables:
+   ```bash
+   cd backend
+   python migrate_chat.py
    ```
 
 ## Project Structure

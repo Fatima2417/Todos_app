@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/lib/auth-context';
 import QueryProvider from '@/lib/query-provider';
+import { ChatWidget } from '@/components/chat/ChatWidget';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
               <main className="container mx-auto py-6 px-4">
                 {children}
               </main>
+              <ChatWidget />
             </div>
           </AuthProvider>
         </QueryProvider>

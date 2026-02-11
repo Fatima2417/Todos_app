@@ -1,62 +1,67 @@
-<!-- SYNC IMPACT REPORT
-Version change: 1.0.0 -> 2.0.0
-Modified principles: Spec-Driven Development (SDD) First, Clean & Structured Python, Memory-Based Storage → Agentic Specialization, Full-Stack Architecture, Database Persistence
-Added sections: Security by Default, Clean Architecture, Tech Stack Compliance, JWT Everywhere, User Data Isolation
-Removed sections: Memory-Based Storage, Command-Line Interface Only, Platform Standardization
-Templates requiring updates:
-- .specify/templates/plan-template.md ✅ updated
-- .specify/templates/spec-template.md ✅ updated
-- .specify/templates/tasks-template.md ✅ updated
-- .specify/templates/commands/*.md ⚠ pending review
-Follow-up TODOs: None
+<!--
+Sync Impact Report:
+- Version change: [TEMPLATE] -> 1.0.0
+- List of modified principles:
+    - [PRINCIPLE_1_NAME] -> I. Spec-Driven Development (SDD)
+    - [PRINCIPLE_2_NAME] -> II. Tool-First Intelligence (MCP)
+    - [PRINCIPLE_3_NAME] -> III. Strict Security & Multi-tenancy
+    - [PRINCIPLE_4_NAME] -> IV. Model-Driven Architecture (SQLModel)
+    - [PRINCIPLE_5_NAME] -> V. Conversational Integrity
+    - [PRINCIPLE_6_NAME] -> VI. Test-First & Verifiable Quality
+- Added sections: Tech Stack Standards, Architectural Flow
+- Templates requiring updates:
+    - .specify/templates/plan-template.md (✅ aligned)
+    - .specify/templates/spec-template.md (✅ aligned)
+    - .specify/templates/tasks-template.md (✅ aligned)
+- Follow-up TODOs: None.
 -->
-# Todo Full-Stack Web Application Constitution
+
+# Full-Stack AI Todo Application Constitution
 
 ## Core Principles
 
-### Spec-Driven Development (SDD) First
-All code must originate from Claude Code based on Markdown specs. No manual coding allowed. This ensures traceability, reduces defects, and maintains alignment between requirements and implementation. All work begins in `/specs/`.
+### I. Spec-Driven Development (SDD)
+All functional changes MUST originate from a formal specification in the `/specs/` directory, followed by a technical implementation plan and a granular task list. Code implementation only begins after the specification and plan are ratified. This ensures architectural alignment and prevents scope creep.
 
-### Agentic Specialization
-The four specialized agents (`jwt-auth-specialist`, `neon-database-operator`, `fastapi-backend-architect`, `nextjs-frontend-engineer`) are the sole executors for their domains. All implementation tasks must be directed to the correct specialized agent based on the domain of work.
+### II. Tool-First Intelligence (MCP)
+Every core business capability (CRUD operations, status transitions, etc.) MUST be exposed via standardized Model Context Protocol (MCP) tools. The AI agent MUST NOT interact with the database or business logic directly; it MUST use these standardized interfaces to ensure observability, control, and protocol-level isolation.
 
-### Full-Stack Architecture
-Build a complete web application with Next.js frontend, FastAPI backend, and Neon PostgreSQL database. Maintain clear separation between UI, API/Logic, and Persistence layers. Each layer must have defined interfaces and minimal coupling.
+### III. Strict Security & Multi-tenancy
+Mandatory JWT verification via Better Auth is required for every request. All data access MUST be strictly isolated by `user_id` at both the database layer (SQLModel) and the MCP tool level. Proving data isolation through automated security tests is a non-negotiable success criterion for every feature.
 
-### Security by Default
-All user data must be isolated at the database and API level. JWT tokens must authenticate all communication between frontend and backend. Security considerations must be addressed from the initial design phase, not added later.
+### IV. Model-Driven Architecture (SQLModel)
+SQLModel serves as the single source of truth for database schema, API validation, and internal data structures. Every core entity (Task, Conversation, Message) MUST be defined as a SQLModel class to ensure type safety and consistency across the stack.
 
-### Clean Architecture
-Maintain a strict separation of concerns: Frontend (UI), Backend (API/Logic), Database (Persistence), Auth (Security). Each layer has well-defined responsibilities and interfaces, promoting maintainability and testability.
+### V. Conversational Integrity
+Every chat interaction MUST be persisted in the `Conversation` and `Message` tables. The chat endpoint MUST remain stateless, reconstructing the necessary context from the database for each agent invocation. This ensures that the system remains robust, auditable, and capable of long-term memory.
 
-### Tech Stack Compliance
-Use only the technologies mandated in the hackathon brief (Next.js 16+ App Router, FastAPI, SQLModel, Neon PostgreSQL, Better Auth). Adhere to the specified versions and integration patterns to ensure compatibility and deployment readiness.
+### VI. Test-First & Verifiable Quality
+Test-Driven Development (TDD) is the standard for all core logic. Every User Story defined in a specification MUST have an associated independent test journey. No PR shall be merged without passing all unit, integration, and security-focused regression tests.
 
-### API Contract First
-Design all backend APIs with Pydantic models first, ensuring type-safe requests and responses. Frontend and backend contracts must be clearly defined before implementation to prevent integration issues.
+## Tech Stack Standards
 
-## Additional Constraints
+The project strictly adheres to the following technology stack:
+- **Backend**: FastAPI (Python 3.13+)
+- **Database**: Neon PostgreSQL with SQLModel ORM
+- **Frontend**: Next.js 14+ with Tailwind CSS and OpenAI ChatKit
+- **Authentication**: Better Auth with JWT
+- **Intelligence**: OpenAgentsSDK for agent orchestration and MCP for tool definitions
 
-**No Manual Coding**: All implementation must be performed by Claude Code, guided by specs and executed by the designated agents. Manual code edits are prohibited.
+## Architectural Flow
 
-**Phase II Scope**: Implement only the five Basic Level features (Add, Delete, Update, View, Mark Complete) within the full-stack architecture. Do not build Intermediate or Advanced features (e.g., priorities, due dates).
-
-**Stateless Backend**: The FastAPI service must remain stateless. User session data must be stored in the JWT token or the database, not in server memory.
-
-**Monorepo Structure**: The project must adhere to the Spec-Kit monorepo structure with a clear `/specs/` directory and organized frontend/backend/database sections.
-
-**Environment Variables**: All secrets (Database URL, JWT Secret) and configuration must be managed via environment variables. Hardcoded credentials are prohibited.
-
-## Development Workflow
-
-**Specification Requirement**: Each feature requires a Markdown spec in `/specs/`. No implementation without a corresponding spec document. Specifications must include acceptance criteria and security requirements.
-
-**Agentic Workflow Protocol**: All development cycles are initiated by the Project Orchestrator. For each task, specify which agent is responsible, provide context from the relevant spec, and deliver a precise implementation prompt.
-
-**Integration Testing**: The system must demonstrate full-stack functionality with secure authentication, data persistence, and user isolation working end-to-end. All five Basic Level features must work for logged-in users.
+System interactions MUST follow this standard data flow:
+1. **Request**: User message sent via OpenAI ChatKit with a JWT.
+2. **Endpoint**: FastAPI validates the JWT and retrieves conversation history from the database.
+3. **Reasoning**: OpenAgentsSDK Agent processes the prompt using history, the new message, and available MCP tools.
+4. **Execution**: The Agent executes tool calls via the MCP Server, which performs database operations via SQLModel.
+5. **Persistence**: The Agent response and user message are saved to the database.
+6. **Delivery**: The natural language response is returned to the frontend.
 
 ## Governance
 
-This constitution supersedes all other development practices. All code contributions must comply with these principles. Amendments require formal documentation and team approval. All pull requests and reviews must verify constitution compliance. This document serves as the definitive authority for development standards and practices.
+- **Supremacy**: This Constitution supersedes all other project documentation and practices.
+- **Amendments**: Changes to these principles require a version bump (SemVer) and a corresponding update to the Sync Impact Report at the top of this file.
+- **Compliance**: All Pull Requests MUST include a "Constitution Check" in their implementation plan to justify any deviations or confirm adherence to these rules.
+- **Versioning**: MAJOR bumps for principle removals, MINOR for additions, PATCH for clarifications.
 
-**Version**: 2.0.0 | **Ratified**: 2026-02-05 | **Last Amended**: 2026-02-05
+**Version**: 1.0.0 | **Ratified**: 2026-02-11 | **Last Amended**: 2026-02-11

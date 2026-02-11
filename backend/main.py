@@ -7,6 +7,7 @@ from sqlmodel import Session
 from src.database.init_db import initialize_database
 from src.api.routes.auth import router as auth_router
 from src.api.routes.tasks import router as tasks_router
+from src.api.chat import router as chat_router
 from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
@@ -43,6 +44,7 @@ except Exception as e:
 
 # Register routes
 app.include_router(auth_router, prefix="")
+app.include_router(chat_router, prefix="")
 app.include_router(tasks_router, prefix="/api/v1/{path_user_id}")
 
 @app.get("/")

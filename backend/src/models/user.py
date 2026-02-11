@@ -1,6 +1,6 @@
-from sqlmodel import SQLModel, Field
-from datetime import datetime
-from typing import Optional
+from sqlmodel import SQLModel, Field, Relationship
+from datetime import datetime, timezone
+from typing import Optional, List
 import uuid
 
 
@@ -16,9 +16,11 @@ class User(UserBase, table=True):
     """
     __tablename__ = "users"
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     hashed_password: str = Field()
+
+    conversations: List["Conversation"] = Relationship(back_populates="user")
 
 
 class UserRead(SQLModel):

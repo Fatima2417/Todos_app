@@ -2,6 +2,9 @@
 frontend/.next
 frontend/node_modules
 frontend/.env.local
+frontend/dist/
+frontend/build/
+frontend/coverage/
 
 # Backend Python
 __pycache__/
@@ -12,10 +15,16 @@ __pycache__/
 env/
 venv/
 .env
+backend/dist/
+backend/build/
+backend/*.egg-info/
+backend/htmlcov/
+backend/.pytest_cache/
 
 # System files
 .DS_Store
 Thumbs.db
+*.log
 
 # Editor files
 .vscode/

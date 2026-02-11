@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from src.api.routes.tasks import router as tasks_router
 from src.api.routes.auth import router as auth_router
+from src.api.chat import router as chat_router
 from src.core.config import PROJECT_NAME, VERSION, API_V1_STR, DEBUG
 from src.database.init_db import initialize_database
 from fastapi.middleware.cors import CORSMiddleware
@@ -47,8 +48,11 @@ app.add_middleware(
 # Register the auth routes under the root path
 app.include_router(auth_router, prefix="")
 
+# Register the chat router
+app.include_router(chat_router, prefix="")
+
 # Register the API routes under the v1 prefix
-app.include_router(tasks_router, prefix=API_V1_STR + "/{user_id}", tags=["todo-tasks"])
+app.include_router(tasks_router, prefix=API_V1_STR + "/{path_user_id}", tags=["todo-tasks"])
 
 
 @app.get("/")
