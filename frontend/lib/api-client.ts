@@ -1,6 +1,6 @@
 // frontend/lib/api-client.ts
-import { betterAuth } from '@/lib/auth'; // Better Auth integration
 import { Task } from './types';
+import { API_BASE_URL } from './config';
 
 interface ApiClientOptions extends RequestInit {
   user_id?: string;
@@ -18,9 +18,7 @@ export const apiClient = async <T>(
     (localStorage.getItem('todo-app-auth') ? JSON.parse(localStorage.getItem('todo-app-auth')!).token : null) 
     : null;
 
-  // Construct the full URL using environment variable
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
-  const url = `${apiUrl}${endpoint}`;
+  const url = `${API_BASE_URL}${endpoint}`;
 
   // Construct headers with default Content-Type and Authorization
   const headers = new Headers({

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/lib/auth-context';
+import { API_ENDPOINTS, API_BASE_URL } from '@/lib/config';
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,10 +41,9 @@ export function ChatWidget() {
         throw new Error('No token found in authentication data. Please log in again.');
       }
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-      console.log('Sending request to:', `${apiUrl}/api/chat`);
+      console.log('Sending request to:', API_ENDPOINTS.CHAT);
 
-      const response = await fetch(`${apiUrl}/api/chat`, {
+      const response = await fetch(API_ENDPOINTS.CHAT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,24 +56,40 @@ export function ChatWidget() {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Backend error:', response.status, errorText);
+        let errorDetail = "";
+        try {
+          const errorJson = await response.json();
+          errorDetail = errorJson.detail || JSON.stringify(errorJson);
+        } catch (e) {
+          // If not JSON, get the text
+          errorDetail = await response.text();
+        }
+        
+        console.error('Backend error:', response.status, errorDetail);
         
         if (response.status === 401) {
           throw new Error('Your session has expired or is invalid. Please log out and log in again.');
         }
         
-        throw new Error(`Server returned ${response.status}: ${errorText || response.statusText}`);
+        // Return the first 200 characters of the error to avoid UI breakage
+        throw new Error(`Server Error (${response.status}): ${errorDetail.substring(0, 200)}`);
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        const text = await response.text();
+        console.error('Failed to parse response as JSON:', text);
+        throw new Error('Invalid response format from server');
+      }
       setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
       setConversationId(data.conversation_id);
     } catch (error: any) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: `Error: ${error.message}. Please check if the backend is running at http://localhost:8000 and you are logged in.` 
+        content: `Error: ${error.message}. Please check if the backend is running at ${API_BASE_URL} and you are logged in.` 
       }]);
     } finally {
       setIsLoading(false);

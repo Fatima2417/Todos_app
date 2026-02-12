@@ -1,6 +1,8 @@
 // frontend/lib/simple-auth.ts
 // Simple authentication system that works with our FastAPI backend
 
+import { API_ENDPOINTS } from './config';
+
 // Store auth state in localStorage
 const AUTH_STORAGE_KEY = 'todo-app-auth';
 
@@ -37,7 +39,7 @@ export const clearStoredAuth = () => {
 };
 
 export const signup = async (email: string, password: string, name?: string) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up/email`, {
+  const response = await fetch(API_ENDPOINTS.SIGN_UP, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -63,7 +65,7 @@ export const signup = async (email: string, password: string, name?: string) => 
 };
 
 export const login = async (email: string, password: string) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in/email`, {
+  const response = await fetch(API_ENDPOINTS.SIGN_IN, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
